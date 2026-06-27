@@ -132,5 +132,8 @@ const getWeeklyCalories = (): WeeklyCalories => {
   return toWeeklyCalories_(weeklyMap);
 };
 
-const doGet = (): any =>
-  HtmlService.createHtmlOutputFromFile("food-log").setTitle("食べたものメモ");
+const doGet = (): GoogleAppsScript.HTML.HtmlOutput => {
+  return HtmlService.createHtmlOutputFromFile("food-log").setTitle(
+    "食べたものメモ",
+  );
+};
