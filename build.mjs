@@ -9,7 +9,7 @@ await esbuild.build({
     // NOTE: `JSON.stringify`は必要 ※利用しないと文字列の前後にダブルコートがつかない
     "process.env.SHEET_ID": JSON.stringify(process.env.SHEET_ID ?? ""),
   },
-  entryPoints: ["src/index.ts"],
+  entryPoints: ["src/index.ts", "src/utils.ts"],
   format: "cjs",
   outdir: "dist",
   platform: "browser",
@@ -18,10 +18,9 @@ await esbuild.build({
   minifyWhitespace: true,
 });
 
-// TODO: htmlファイルのみコピーする。gitkeepがあるとき、distに入ってしまう
-// try {
-//   await fs.cp("src/html", "dist", { recursive: true });
-//   console.log("HTML files copied successfully to dist/html");
-// } catch (error) {
-//   console.error("Error copying HTML files:", error);
-// }
+try {
+  await fs.cp("src/html", "dist", { recursive: true });
+  console.log("HTML files copied successfully to dist/html");
+} catch (error) {
+  console.error("Error copying HTML files:", error);
+}
