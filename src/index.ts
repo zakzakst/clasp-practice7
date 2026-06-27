@@ -135,5 +135,6 @@ const getWeeklyCalories = (): WeeklyCalories => {
 const doGet = (): GoogleAppsScript.HTML.HtmlOutput => {
   return HtmlService.createTemplateFromFile("food-log")
     .evaluate()
-    .setTitle("食べたものメモ");
+    .setTitle("食べたものメモ")
+    .addMetaTag("viewport", "width=device-width, initial-scale=1");
 };
