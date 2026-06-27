@@ -1,0 +1,39 @@
+{
+  "name": "clasp-template",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/zakzakst/clasp-template#readme",
+  "bugs": {
+    "url": "https://github.com/zakzakst/clasp-template/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakzakst/clasp-template.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "clasp:pull": "clasp pull",
+    "eslint": "eslint src/",
+    "prettier": "prettier . --write",
+    "build": "node build.mjs",
+    "push": "npm run build && copy appsscript.json dist/appsscript.json && clasp push"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@google/clasp": "^3.3.0",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/google-apps-script": "^2.0.8",
+    "@types/node": "^25.7.0",
+    "dotenv": "^17.4.2",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.3"
+  }
+}

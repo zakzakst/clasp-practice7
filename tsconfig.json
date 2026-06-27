@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "types": ["google-apps-script", "node"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@common/*": ["./src/utils/common/*"],
+      "@document/*": ["./src/utils/document/*"],
+      "@calendar/*": ["./src/utils/calendar/*"],
+      "@spreadsheet/*": ["./src/utils/spreadsheet/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}
