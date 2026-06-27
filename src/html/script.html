@@ -1,0 +1,102 @@
+<script>
+  const tabs = {
+    input: document.getElementById("tab-input"),
+    weekly: document.getElementById("tab-weekly"),
+  };
+  const buttons = {
+    input: document.getElementById("tab-input-button"),
+    weekly: document.getElementById("tab-weekly-button"),
+  };
+
+  const showTab = (name) => {
+    tabs.input.classList.toggle("is-hidden", name !== "input");
+    tabs.weekly.classList.toggle("is-hidden", name !== "weekly");
+    buttons.input.classList.toggle("is-active", name === "input");
+    buttons.weekly.classList.toggle("is-active", name === "weekly");
+    if (name === "weekly") {
+      loadWeeklyData();
+    }
+  };
+
+  buttons.input.addEventListener("click", () => showTab("input"));
+  buttons.weekly.addEventListener("click", () => showTab("weekly"));
+
+  const form = document.getElementById("food-form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const dateValue = document.getElementById("date").value;
+    const calories = document.getElementById("calories").value;
+
+    if (!name || !dateValue || !calories) {
+      alert("全ての項目を入力してください。");
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler((message) => {
+        alert(message);
+        form.reset();
+        showTab("weekly");
+      })
+      .withFailureHandler((error) => {
+        alert(error.message || "登録に失敗しました。");
+      })
+      .appendFoodLog(name, dateValue, Number(calories));
+  });
+
+  let chartsLoaded = false;
+  google.charts.load("current", { packages: ["corechart"] });
+  google.charts.setOnLoadCallback(() => {
+    chartsLoaded = true;
+  });
+
+  const loadWeeklyData = () => {
+    document.getElementById("chart-message").textContent = "読み込み中...";
+    google.script.run
+      .withSuccessHandler(renderChart)
+      .withFailureHandler((error) => {
+        document.getElementById("chart-message").textContent =
+          error.message || "データの取得に失敗しました。";
+      })
+      .getWeeklyCalories();
+  };
+
+  const renderChart = (data) => {
+    const messageEl = document.getElementById("chart-message");
+    const container = document.getElementById("chart_div");
+    container.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      messageEl.textContent = "直近7日間のデータがありません。";
+      return;
+    }
+
+    messageEl.textContent = "";
+    const dataTable = new google.visualization.DataTable();
+    dataTable.addColumn("string", "日付");
+    dataTable.addColumn("number", "カロリー");
+    data.forEach((item) => {
+      dataTable.addRow([item.date, Number(item.calories) || 0]);
+    });
+
+    const options = {
+      title: "直近7日間のカロリー",
+      legend: { position: "none" },
+      height: 360,
+      vAxis: { minValue: 0 },
+    };
+
+    const chart = new google.visualization.ColumnChart(container);
+    if (chartsLoaded) {
+      chart.draw(dataTable, options);
+    } else {
+      google.charts.setOnLoadCallback(() => chart.draw(dataTable, options));
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById("date").value = today;
+  });
+</script>
